@@ -25,137 +25,170 @@ fwidth = asize[1]
 fheight = asize[0]
 wwidth = asize[3]
 wheight = asize[2]
-offset = fwidth
+foffset = fwidth
+woffset = wwidth
 
-print("Frame dimensions: ", fheight, "x", fwidth,)
-print("Window dimensions: ", wheight, "x", wwidth,)
+print("Frame dimensions: ", fheight, "x", fwidth)
+print("Window dimensions: ", wheight, "x", wwidth)
 
-arraysize = fwidth*fheight
+fSize = fwidth*fheight
+wsize = wwidth*wheight
 pathArray = []
 
-for j in range(arraysize):
+for j in range(fSize):
     pathArray.append(0)
 
 
 
-def leftToRight(i, fheight, fwidth):
+def checkImage(i, min):
+    iLocal = i
+    sum = 0
+    for w in range(wwidth):
+        sum = sum + (frame[iLocal] - window[w])
+        iLocal = iLocal + 1
+    
+    iLocal = i
+    for h in range(wheight):
+        sum = sum + (frame[iLocal + h*foffset] - window[h + h*woffset])
+        iLocal = iLocal + 1
+
+    if (abs(sum) < abs(min)):
+            min = sum
+
+    return min
+
+
+def leftToRight(i, fheight, fwidth, min):
     isDone = False 
     if (fwidth < 0):
-        return fheight, i, isDone
+        return fheight, i, isDone, min
 
     localIndex = 0
     rightBound = localIndex + (wwidth)
     while (rightBound <= fwidth):
         if (pathArray[i+1] == 1): 
             isDone = True
-            return fheight, i, isDone
+            return fheight, i, isDone, min
  
         i = i+1
         pathArray[i] = 1
         print(frame[i], " ")
+        min = checkImage(i, min)
 
         localIndex = localIndex + 1
         rightBound = localIndex + (wwidth)
 
     fheight = fheight - 1
 
-    return fheight, i, isDone 
+    return fheight, i, isDone , min
 
 
 
-def upToDown(i, fheight, fwidth, offset):
+def upToDown(i, fheight, fwidth, foffset, min):
     isDone = False
     if (fheight < 0):
-        return fwidth, i, isDone
+        return fwidth, i, isDone, min
 
     localIndex = 0
     lowerBound = localIndex + (wheight)
     while (lowerBound <= fheight): 
-        if (pathArray[i+offset] == 1): 
+        if (pathArray[i+foffset] == 1): 
             isDone = True
-            return fwidth, i, isDone
+            return fwidth, i, isDone, min
 
-        i = i + offset
+        i = i + foffset
         pathArray[i] = 1
         print(frame[i])
+        min = checkImage(i, min)
         
         localIndex = localIndex+1
         lowerBound = localIndex + (wheight)
 
     fwidth = fwidth - 1
-    return fwidth, i, isDone
+    return fwidth, i, isDone, min
 
 
-def rightToLeft(i, fheight, fwidth):
+def rightToLeft(i, fheight, fwidth, min):
     isDone = False
     if (fwidth < 0):
-        return fheight, i, isDone
+        return fheight, i, isDone, min
 
     localIndex = (fwidth - wwidth)
     while (localIndex >= 0):
         if (pathArray[i-1] == 1): 
             isDone = True
-            return fheight, i, isDone
+            return fheight, i, isDone, min
 
         i = i - 1 
         pathArray[i] = 1
         print(frame[i])
+        min = checkImage(i, min)
+
         localIndex = localIndex - 1
 
     fheight = fheight - 1
-    return fheight, i, isDone
+    return fheight, i, isDone, min
 
 
-def downToUp(i, fheight, fwidth, offset):
+def downToUp(i, fheight, fwidth, foffset, min):
     isDone = False
     if (fheight < 0):
-        return fwidth, i, isDone
+        return fwidth, i, isDone, min
 
     localIndex = (fheight - wheight)
     while (localIndex >= 0):
-        if (pathArray[i-offset] == 1): 
+        if (pathArray[i-foffset] == 1): 
             isDone = True
-            return fwidth, i, isDone
+            return fwidth, i, isDone, min
 
-        i = i - offset 
+        i = i - foffset 
         pathArray[i] = 1
         print(frame[i])
+        min = checkImage(i, min)
+
         localIndex = localIndex + 1
 
     fwidth = fwidth - 1
-    return fwidth, i, isDone
+    return fwidth, i, isDone, min
     
 i = -1
 done = False
+min = 1000
 
 while (done == False):
-    l2r = leftToRight(i, fheight, fwidth)
+    
+
+    l2r = leftToRight(i, fheight, fwidth, min)
     fheight = l2r[0]
     i = l2r[1]
     l2rDone = l2r[2]
+    min = l2r[3]
 
-    u2d = upToDown(i, fheight, fwidth, offset)
+    u2d = upToDown(i, fheight, fwidth, foffset, min)
     fwidth = u2d[0]
     i = u2d[1]
     u2dDone = u2d[2]
+    min = u2d[3]
 
-    r2l = rightToLeft(i, fheight, fwidth)
+    r2l = rightToLeft(i, fheight, fwidth, min)
     fheight = r2l[0]
     i = r2l[1]
     r2lDone = r2l[2]
+    min = r2l[3]
 
-    d2u = downToUp(i, fheight, fwidth, offset)
+    d2u = downToUp(i, fheight, fwidth, foffset, min)
     fwidth = d2u[0]
     i = d2u[1]
     d2uDone = d2u[2]
+    min = d2u[3]
 
-
+    
 
     if (l2rDone == True and u2dDone == True and r2lDone == True and d2uDone == True):
         break
             
 
-
+print("Minimum Value: ", min)
 print("Done!")
 
 
