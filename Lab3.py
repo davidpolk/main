@@ -180,38 +180,5 @@ print("Done!")
 
 
 
-# passTotal = window.size()
-
-
-
-# passCount = 0
-
-# for i in window:
-#     for j in frame:
-#         if ((i - j) < 0.1):
-#             passCount = passCount + 1
-#             break
-        
-#     if (passCount == passTotal) :
-#         break
-
-
-
-# windowIndex = 0
-# isTrack = False
-# trackArray = []
-
-# for framei in range(len(frame)):
-
-#     if ( (frame[framei] - window[windowIndex]) < 0.1 ):
-#         trackArray.append(window[windowIndex])
-
-#         for tracki in range(len(trackArray)):
-#             if ( (trackArray[trackArray.size()+1 -tracki] - frame[frame+1 -tracki]) < 0.1):
-#                 isTrack = True
-
-#             else:
-#                 isTrack = False
-
         
     
