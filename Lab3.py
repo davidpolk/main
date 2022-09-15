@@ -1,24 +1,25 @@
 
-asize = [4, 4, 2, 2]
+asize = [5, 8, 2, 4]
 
 # frame = [0, 0, 1, 2,
 #          0, 0, 3, 4,
 #          0, 0, 0, 0, 
-#          0, 0, 0, 0,]
+#          0, 0, 0, 0]
 
-frame = [1, 2, 3, 4,
-         12, 13, 14, 5,
-         11, 16, 15, 6, 
-         10, 9, 8, 7,]
+# frame = [1, 2, 3, 4,
+#          12, 13, 14, 5,
+#          11, 16, 15, 6, 
+#          10, 9, 8, 7]
 
-# frame = [1, 2, 3, 4, 5, 6,
-#          18, 19, 20, 21, 22, 7, 
-#          17, 28, 29, 30, 23, 8,
-#          16, 27, 26, 25, 24, 9,
-#          15, 14, 13, 12, 11, 10,]
+frame = [1, 2, 3, 4, 39, 40, 41, 42,
+         18, 19, 20, 21, 31, 32, 43, 44,
+         17, 28, 29, 22, 33, 34, 45, 46,
+         16, 27, 26, 23, 35, 36, 5, 6,
+         15, 14, 13, 24, 37, 38, 7, 8]
+          
+window = [1, 2, 5, 6,
+          3, 4, 7, 8]
 
-window = [1, 2,
-          3, 4]
 
 fwidth = asize[1]
 fheight = asize[0]
@@ -39,22 +40,26 @@ for j in range(arraysize):
 
 def leftToRight(i, fheight, fwidth):
     isDone = False
+    #print("FWidth: ", fwidth)
     if (fwidth < 0):
-        return fheight, i
+        return fheight, i, isDone
 
     localIndex = 0
-    i = i + 1
+    
     rightBound = localIndex + (wwidth)
+    #print("rightBound: ", rightBound)
     #print("rightbount: ", rightBound)
     while (rightBound <= fwidth):
         if (pathArray[i+1] == 1): 
+            #print("1Right: ", frame[i+1])
             isDone = True
             return fheight, i, isDone
  
-
+        
+        i = i+1
         pathArray[i] = 1
         print(frame[i], " ")
-        i= i+1
+        
 
         localIndex = localIndex + 1
         rightBound = localIndex + (wwidth)
@@ -71,10 +76,10 @@ def upToDown(i, fheight, fwidth, offset):
         return fwidth, i, isDone
 
     localIndex = 0
-    i = i-1
     lowerBound = localIndex + (wheight)
-    #print("lowerBount: ", lowerBound)
-    while (lowerBound <= fheight):
+   
+    while (lowerBound <= fheight): 
+        #print("localIndex: ", localIndex, "  lowerBound: ", lowerBound, "    fheight: ", fheight)
         if (pathArray[i+offset] == 1): 
             isDone = True
             return fwidth, i, isDone
@@ -84,7 +89,7 @@ def upToDown(i, fheight, fwidth, offset):
         print(frame[i])
         
         localIndex = localIndex+1
-        lowerBound = localIndex + (wwidth)
+        lowerBound = localIndex + (wheight)
 
     fwidth = fwidth - 1
     return fwidth, i, isDone
@@ -133,6 +138,7 @@ i = -1
 done = False
 
 while (done == False):
+    #print("LR")
     l2r = leftToRight(i, fheight, fwidth)
     fheight = l2r[0]
     i = l2r[1]
@@ -140,6 +146,7 @@ while (done == False):
     #print(l2rDone)
     #print("height: ", fheight)
 
+    #print("UD")
     u2d = upToDown(i, fheight, fwidth, offset)
     fwidth = u2d[0]
     i = u2d[1]
@@ -147,12 +154,14 @@ while (done == False):
     #print(u2dDone)
     #print("width: ", fwidth)
 
+    #print("RL")
     r2l = rightToLeft(i, fheight, fwidth)
     fheight = r2l[0]
     i = r2l[1]
     r2lDone = r2l[2]
     #print("height: ", fheight)
 
+    #print("DU")
     d2u = downToUp(i, fheight, fwidth, offset)
     fwidth = d2u[0]
     i = d2u[1]
